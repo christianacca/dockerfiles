@@ -1,0 +1,1 @@
+docker build -t christianacca/docker-cli-windows .
