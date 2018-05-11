@@ -1,0 +1,10 @@
+# escape=`
+FROM microsoft/windowsservercore:1709 AS download
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+RUN Invoke-WebRequest 'https://probitools.gallerycdn.vsassets.io/extensions/probitools/microsoftreportprojectsforvisualstudio/1.21/1518825488043/Microsoft.DataTools.ReportingServices.vsix' -OutFile 'Microsoft.DataTools.ReportingServices.zip' -UseBasicParsing ; `
+    Expand-Archive Microsoft.DataTools.ReportingServices.zip -DestinationPath C:\Microsoft.DataTools.ReportingServices ; `
+    Remove-Item -Path C:\Microsoft.DataTools.ReportingServices.zip
+
+FROM microsoft/nanoserver:1709
+COPY --from=download ["C:/Microsoft.DataTools.ReportingServices/`$MSBuild/Reporting%20Services", "C:/MSBuild/Reporting Services"]
