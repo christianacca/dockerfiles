@@ -5,9 +5,17 @@ param(
 $dotNetVersion = '4.7.2'
 $osVersion = '1803'
 
-$tag = "$dotNetVersion-sdk-windowsservercore-$osVersion"
-docker build -t christianacca/dotnet-framework:$tag .
+$imageName = 'christianacca/dotnet-framework'
+$tags = 'sdk', "$dotNetVersion-sdk", "$dotNetVersion-sdk-windowsservercore-$osVersion"
+$latestImageTag = '{0}:{1}' -f $imageName, ($tags[0])
+
+docker build -t $latestImageTag .
+foreach ($tag in ($tags | Select-Object -Skip 1)) {
+    docker tag $latestImageTag $imageName`:$tag
+}
 
 if ($Publish) {
-    docker push christianacca/dotnet-framework:$tag
+    foreach ($tag in $tags) {
+        docker push $imageName`:$tag
+    }
 }
