@@ -1,13 +1,17 @@
+# escape=`
+
 FROM microsoft/windowsservercore:1803
+
+ARG SQL_COLLATION=SQL_Latin1_General_CP1_CI_AS
 
 LABEL maintainer "christianacca"
 
 # Download Links:
 ENV sql_express_download_url "https://go.microsoft.com/fwlink/?linkid=829176"
 
-ENV sa_password="_" \
-    attach_dbs="[]" \
-    ACCEPT_EULA="_" \
+ENV sa_password="_" `
+    attach_dbs="[]" `
+    ACCEPT_EULA="_" `
     sa_password_path="C:\ProgramData\Docker\secrets\sa-password"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
@@ -16,14 +20,15 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 COPY start.ps1 /
 WORKDIR /
 
-RUN Invoke-WebRequest -Uri $env:sql_express_download_url -OutFile sqlexpress.exe ; \
-        Start-Process -Wait -FilePath .\sqlexpress.exe -ArgumentList /qs, /x:setup ; \
-        .\setup\setup.exe /q /ACTION=Install /INSTANCENAME=SQLEXPRESS /FEATURES=SQLEngine /UPDATEENABLED=0 /SQLSVCACCOUNT='NT AUTHORITY\System' /SQLSYSADMINACCOUNTS='BUILTIN\ADMINISTRATORS' /TCPENABLED=1 /NPENABLED=0 /IACCEPTSQLSERVERLICENSETERMS ; \
+VOLUME C:/Sql/Backup
+VOLUME C:/Sql/UserDbs/Data
+VOLUME C:/Sql/UserDbs/Log
+
+RUN Invoke-WebRequest -Uri $env:sql_express_download_url -OutFile sqlexpress.exe; `
+        Start-Process -Wait -FilePath .\sqlexpress.exe -ArgumentList /qs, /x:setup; `
+        .\setup\setup.exe /q /ACTION=Install /INSTANCENAME=DOCKERSQL /FEATURES=SQLEngine /UPDATEENABLED=0 /SQLSVCACCOUNT='NT AUTHORITY\System' /SQLSYSADMINACCOUNTS='BUILTIN\ADMINISTRATORS' /TCPENABLED=1 /NPENABLED=0 /IACCEPTSQLSERVERLICENSETERMS /INSTALLSQLDATADIR=C:\Sql /SQLBACKUPDIR=C:\Sql\Backup /SQLUSERDBDIR=C:\Sql\UserDbs\Data /SQLUSERDBLOGDIR=C:\Sql\UserDbs\Log /SQLCOLLATION=$env:SQL_COLLATION; if ($LASTEXITCODE -ne 0) { throw ('SQL Install failed with exit code {0}' -f $LASTEXITCODE) }; `
         Remove-Item -Recurse -Force sqlexpress.exe, setup
 
-RUN stop-service MSSQL`$SQLEXPRESS ; \
-        set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpdynamicports -value '' ; \
-        set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpport -value 1433 ; \
-        set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\' -name LoginMode -value 2 ;
+RUN stop-service MSSQL`$DOCKERSQL; set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.DOCKERSQL\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpdynamicports -value '' ; set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.DOCKERSQL\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpport -value 1433 ; set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.DOCKERSQL\mssqlserver\' -name LoginMode -value 2 ;
 
 CMD .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose
