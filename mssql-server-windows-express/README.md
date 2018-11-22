@@ -16,5 +16,6 @@ Fork of official [microsoft/mssql-server-windows-express](https://github.com/Mic
 
 ## Supported tags
 
-* latest, 1803, SQL_Latin1_General_CP1_CI_AS, SQL_Latin1_General_CP1_CI_AS-1803 [Dockerfile](https://github.com/christianacca/dockerfiles/blob/master/mssql-server-windows-express/dockerfile)
-* Latin1_General_CI_AS, Latin1_General_CI_AS-1803 [Dockerfile](https://github.com/christianacca/dockerfiles/blob/master/mssql-server-windows-express/dockerfile)
+* `latest`, `1803`, `2017-latest`, `2017-GA, SQL_Latin1_General_CP1_CI_AS`, `SQL_Latin1_General_CP1_CI_AS-1803`, `2017-latest-SQL_Latin1_General_CP1_CI_AS`, `2017-GA-SQL_Latin1_General_CP1_CI_AS`, `2017-GA-SQL_Latin1_General_CP1_CI_AS-1803` [Dockerfile](https://github.com/christianacca/dockerfiles/blob/master/mssql-server-windows-express/dockerfile)
+* `Latin1_General_CI_AS`, `Latin1_General_CI_AS-1803`, `2017-latest-Latin1_General_CI_AS`, `2017-GA-Latin1_General_CI_AS`, `2017-GA-Latin1_General_CI_AS-1803` [Dockerfile](https://github.com/christianacca/dockerfiles/blob/master/mssql-server-windows-express/dockerfile)
+

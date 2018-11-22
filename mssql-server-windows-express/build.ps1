@@ -17,13 +17,33 @@ begin {
 process {
 
     $osVersion = '1803'
+    $sqlVersion = '2017'
+    $sqlRelease = 'GA'
+    $release = @(
+        @{ Name = 'GA';   DownloadUrl = 'https://go.microsoft.com/fwlink/?linkid=829176'}
+        @{ Name = 'CU12'; DownloadUrl = 'https://download.microsoft.com/download/E/F/2/EF23C21D-7860-4F05-88CE-39AA114B014B/SQLEXPR_x64_ENU.exe'}
+    )
     $repo = 'christianacca/mssql-server-windows-express'
 
     $usCollation = 'SQL_Latin1_General_CP1_CI_AS'
     $ukCollation = 'Latin1_General_CI_AS'
     $builds = @{
-        $usCollation = 'latest', $osVersion, "$usCollation-$osVersion"
-        $ukCollation = "$ukCollation-$osVersion"
+        $usCollation = @(
+            'latest'
+            $osVersion
+            "$sqlVersion-latest"
+            "$sqlVersion-$sqlRelease"
+            "$usCollation-$osVersion" 
+            "$sqlVersion-latest-$usCollation"
+            "$sqlVersion-$sqlRelease-$usCollation"
+            "$sqlVersion-$sqlRelease-$usCollation-$osVersion"
+        )
+        $ukCollation = @(
+            "$ukCollation-$osVersion"
+            "$sqlVersion-latest-$ukCollation"
+            "$sqlVersion-$sqlRelease-$ukCollation"
+            "$sqlVersion-$sqlRelease-$ukCollation-$osVersion"
+        )
     }
 
     foreach ($collation in $builds.Keys) {
@@ -35,7 +55,7 @@ process {
     }
 
     if ($Publish) {
-        foreach ($tag in ($builds.Keys + $builds.Values)) {
+        foreach ($tag in ($builds.Keys + ($builds.Values | ForEach-Object { $_ }))) {
             exec { docker push $repo`:$tag }
         }
     }
