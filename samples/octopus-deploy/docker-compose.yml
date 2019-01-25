@@ -1,0 +1,60 @@
+version: '2.1'
+
+services:
+
+  db:
+    image: "${SQL_IMAGE}"
+    environment:
+      sa_password: "${SA_PASSWORD}"
+      ACCEPT_EULA: "Y"
+    healthcheck:
+      test: [ "CMD", "sqlcmd", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "select 1" ]
+      interval: 10s
+      retries: 10
+
+  octopus:
+    image: octopusdeploy/octopusdeploy${OCTOPUS_SERVER_REPO_SUFFIX}:${OCTOPUS_VERSION}
+    environment:
+      OctopusAdminUsername: "${OCTOPUS_ADMIN_USERNAME}"
+      OctopusAdminPassword: "${OCTOPUS_ADMIN_PASSWORD}"
+      sqlDbConnectionString: "Server=db,1433;Initial Catalog=Octopus;Persist Security Info=False;User ID=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=False;Connection Timeout=30;"
+    ports:
+     - "81:81"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - "./volumes/server/import:C:/Import"
+      - "./volumes/server/repository:C:/Repository"
+      - "./volumes/server/artifacts:C:/Artifacts"
+      - "./volumes/server/tasklogs:C:/TaskLogs"
+      - "./volumes/server/masterkey:C:/MasterKey"
+      - "./volumes/server/serverlogs:C:/Octopus/Logs"
+
+  tentacle:
+    image: octopusdeploy/tentacle${OCTOPUS_TENTACLE_REPO_SUFFIX}:${TENTACLE_VERSION}
+    depends_on:
+      octopus:
+        condition: service_healthy
+    environment:
+      ServerUsername: "${OCTOPUS_ADMIN_USERNAME}"
+      ServerPassword: "${OCTOPUS_ADMIN_PASSWORD}"
+      TargetEnvironment: "Development"
+      TargetRole: "app-server"
+      ServerUrl: "http://octopus:81"
+    stdin_open: true #Process sits and waits for ReadLine
+    volumes:
+      - "./volumes/tentacle/applications:C:/Applications"
+      - "./volumes/tentacle/home:C:/TentacleHome"
+  
+  portainer:
+    image: portainer/portainer
+    ports:
+      - 9000:9000
+    volumes:
+      - "./volumes/portainer/data:C:/data"
+      
+networks:
+  default:
+    external:
+      name: nat
