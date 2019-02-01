@@ -11,6 +11,9 @@ services:
       test: [ "CMD", "sqlcmd", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "select 1" ]
       interval: 10s
       retries: 10
+      start_period: 30s
+    networks:
+      - octo-network
 
   octopus:
     image: octopusdeploy/octopusdeploy${OCTOPUS_SERVER_REPO_SUFFIX}:${OCTOPUS_VERSION}
@@ -19,23 +22,28 @@ services:
       OctopusAdminPassword: "${OCTOPUS_ADMIN_PASSWORD}"
       sqlDbConnectionString: "Server=db,1433;Initial Catalog=Octopus;Persist Security Info=False;User ID=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=False;Connection Timeout=30;"
     ports:
-     - "81:81"
+      - "81:81"
+    healthcheck:
+      test: ["CMD", "powershell", "-file", "./Server/healthcheck-server.ps1"]
+      interval: 20s
+      timeout: 20s
+      retries: 6
+      start_period: 120s
+    volumes:
+      - "octo-server-import:C:/Import"
+      - "octo-server-repository:C:/Repository"
+      - "octo-server-artifacts:C:/Artifacts"
+      - "octo-server-tasklogs:C:/TaskLogs"
+      - "octo-server-masterkey:C:/MasterKey"
+      - "octo-server-serverlogs:C:/Octopus/Logs"
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - "./volumes/server/import:C:/Import"
-      - "./volumes/server/repository:C:/Repository"
-      - "./volumes/server/artifacts:C:/Artifacts"
-      - "./volumes/server/tasklogs:C:/TaskLogs"
-      - "./volumes/server/masterkey:C:/MasterKey"
-      - "./volumes/server/serverlogs:C:/Octopus/Logs"
+    networks:
+      - octo-network
 
   tentacle:
     image: octopusdeploy/tentacle${OCTOPUS_TENTACLE_REPO_SUFFIX}:${TENTACLE_VERSION}
-    depends_on:
-      octopus:
-        condition: service_healthy
     environment:
       ServerUsername: "${OCTOPUS_ADMIN_USERNAME}"
       ServerPassword: "${OCTOPUS_ADMIN_PASSWORD}"
@@ -43,9 +51,20 @@ services:
       TargetRole: "app-server"
       ServerUrl: "http://octopus:81"
     stdin_open: true #Process sits and waits for ReadLine
+    healthcheck:
+      test: ["CMD", "powershell", "-file", "./Tentacle/healthcheck-tentacle.ps1"]
+      interval: 20s
+      timeout: 20s
+      retries: 6
+      start_period: 120s
     volumes:
-      - "./volumes/tentacle/applications:C:/Applications"
-      - "./volumes/tentacle/home:C:/TentacleHome"
+      - "octo-tentacle-applications:C:/Applications"
+      - "octo-tentacle-home:C:/TentacleHome"
+    depends_on:
+      octopus:
+        condition: service_healthy
+    networks:
+      - octo-network
   
   portainer:
     image: portainer/portainer
@@ -53,8 +72,18 @@ services:
       - 9000:9000
     volumes:
       - "./volumes/portainer/data:C:/data"
+    networks:
+      - octo-network
+
+volumes:
+  octo-server-import:
+  octo-server-repository:
+  octo-server-artifacts:
+  octo-server-tasklogs:
+  octo-server-masterkey:
+  octo-server-serverlogs:
+  octo-tentacle-applications:
+  octo-tentacle-home:
       
 networks:
-  default:
-    external:
-      name: nat
+  octo-network:
