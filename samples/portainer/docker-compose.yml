@@ -3,17 +3,17 @@ version: '3.7'
 services:
 
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer:latest
     isolation: process
     ports:
       - 9000:9000
     volumes:
-      - "portainer_data:C:/data"
+      - "portainer_data:c:/data"
     networks:
-      - portainer
+      - portainer_net
 
 volumes:
   portainer_data:
 
 networks:
-  portainer:
+  portainer_net:
