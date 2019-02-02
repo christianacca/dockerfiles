@@ -1,4 +1,4 @@
-version: '2.4'
+version: '3.7'
 
 services:
 
@@ -17,6 +17,11 @@ services:
     volumes:
       - "db-data:c:/sql/userdbs/data"
       - "db-logs:c:/sql/userdbs/log"
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.platform.os == windows
     networks:
       - octo-net
 
@@ -26,7 +31,7 @@ services:
       OctopusAdminUsername: "${OCTOPUS_ADMIN_USERNAME}"
       OctopusAdminPassword: "${OCTOPUS_ADMIN_PASSWORD}"
       sqlDbConnectionString: "Server=db,1433;Initial Catalog=Octopus;Persist Security Info=False;User ID=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=False;Connection Timeout=30;"
-      MasterKey: C80c72OCglaRCTEhBwHMWQ==
+      # MasterKey: C80c72OCglaRCTEhBwHMWQ==
     # isolation: process
     ports:
       - "81:81"
@@ -43,9 +48,11 @@ services:
       - "server-tasklogs:C:/TaskLogs"
       - "server-masterkey:C:/MasterKey"
       - "server-serverlogs:C:/Octopus/Logs"
-    depends_on:
-      db:
-        condition: service_healthy
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.platform.os == windows
     networks:
       - octo-net
 
@@ -71,9 +78,11 @@ services:
     volumes:
       - "tentacle-applications:C:/Applications"
       - "tentacle-home:C:/TentacleHome"
-    depends_on:
-      server:
-        condition: service_healthy
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.platform.os == windows
     networks:
       - octo-net
 
@@ -91,5 +100,3 @@ volumes:
       
 networks:
   octo-net:
-    external:
-      name: nat

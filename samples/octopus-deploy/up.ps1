@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param(
     [SecureString] $DatabasePassword,
-    [string] $DatabaseDockerImage = 'christianacca/mssql-server-windows-express:2017-latest-Latin1_General_CI_AS',
-    [string] $OctopusVersion = '2018.12.1-1803',
-    [string] $OctopusTentacleVersion = '3.22.1-1803',
+    [string] $DatabaseVersion = '2017-latest-Latin1_General_CI_AS',
+    [string] $OctopusVersion = '2019.1.2-1809',
+    [string] $OctopusTentacleVersion = '4.0.0-1809',
     [pscredential] $OctopusCredential,
     [switch] $SwarmDeploy
 )
@@ -15,7 +15,7 @@ else {
     'SuperStrongPassword!23'
 }
 $env:SA_PASSWORD = $plainTextPassword
-$env:SQL_IMAGE = $DatabaseDockerImage
+$env:SQL_TAG = $DatabaseVersion
 
 if (!$OctopusCredential) {
     $pswd = ConvertTo-SecureString 'Passw0rd123' -AsPlainText -Force
@@ -27,7 +27,7 @@ $env:OCTOPUS_VERSION = $OctopusVersion
 $env:TENTACLE_VERSION = $OctopusTentacleVersion
 
 if ($SwarmDeploy) {
-    docker stack deploy -c docker-compose.yml octo
+    docker stack deploy -c docker-compose-swarm.yml octo
 } else {
-    docker-compose up -d    
+    docker-compose up -d
 }
