@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+
+  portainer:
+    image: portainer/portainer
+    isolation: process
+    ports:
+      - 9000:9000
+    volumes:
+      - "portainer_data:C:/data"
+    networks:
+      - portainer
+
+volumes:
+  portainer_data:
