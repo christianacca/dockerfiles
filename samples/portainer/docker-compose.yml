@@ -9,6 +9,10 @@ services:
       - 9000:9000
     volumes:
       - "portainer_data:c:/data"
+      # named pipes in the *swarm* stack file available in >=19.03
+      - type: npipe
+        source: \\.\pipe\docker_engine
+        target: \\.\pipe\docker_engine
     networks:
       - portainer_net
 
