@@ -27,7 +27,7 @@ $env:OCTOPUS_VERSION = $OctopusVersion
 $env:TENTACLE_VERSION = $OctopusTentacleVersion
 
 if ($SwarmDeploy) {
-    docker stack deploy -c docker-compose-swarm.yml octo
+    docker stack deploy -c docker-compose-swarm.yml octopus-deploy
 } else {
     docker-compose up -d
 }

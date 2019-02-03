@@ -10,7 +10,7 @@ services:
       attach_dbs: "[{ 'dbName': 'Octopus', 'dbFiles': ['c:\\\\sql\\\\userdbs\\\\data\\\\Octopus.mdf', 'c:\\\\sql\\\\userdbs\\\\log\\\\Octopus_log.ldf'] }]"
     # isolation: process
     healthcheck:
-      test: [ "CMD", "sqlcmd", "-S", "db,1433", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "select 1" ]
+      test: [ "CMD", "sqlcmd", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "select 1" ]
       interval: 10s
       retries: 10
       start_period: 30s
@@ -26,7 +26,7 @@ services:
       OctopusAdminUsername: "${OCTOPUS_ADMIN_USERNAME}"
       OctopusAdminPassword: "${OCTOPUS_ADMIN_PASSWORD}"
       sqlDbConnectionString: "Server=db,1433;Initial Catalog=Octopus;Persist Security Info=False;User ID=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=False;Connection Timeout=30;"
-      MasterKey: C80c72OCglaRCTEhBwHMWQ==
+      # MasterKey: C80c72OCglaRCTEhBwHMWQ==
     # isolation: process
     ports:
       - "81:81"

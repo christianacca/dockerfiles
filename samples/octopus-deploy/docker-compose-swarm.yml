@@ -7,10 +7,9 @@ services:
     environment:
       sa_password: "${SA_PASSWORD}"
       ACCEPT_EULA: "Y"
-      attach_dbs: "[{ 'dbName': 'Octopus', 'dbFiles': ['c:\\\\sql\\\\userdbs\\\\data\\\\Octopus.mdf', 'c:\\\\sql\\\\userdbs\\\\log\\\\Octopus_log.ldf'] }]"
-    # isolation: process
+      # attach_dbs: "[{ 'dbName': 'Octopus', 'dbFiles': ['c:\\\\sql\\\\userdbs\\\\data\\\\Octopus.mdf', 'c:\\\\sql\\\\userdbs\\\\log\\\\Octopus_log.ldf'] }]"
     healthcheck:
-      test: [ "CMD", "sqlcmd", "-S", "db,1433", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "select 1" ]
+      test: [ "CMD", "sqlcmd", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "select 1" ]
       interval: 10s
       retries: 10
       start_period: 30s
@@ -20,7 +19,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == worker
+          # - node.role == worker
           - node.platform.os == windows
     networks:
       - octo-net
@@ -32,7 +31,6 @@ services:
       OctopusAdminPassword: "${OCTOPUS_ADMIN_PASSWORD}"
       sqlDbConnectionString: "Server=db,1433;Initial Catalog=Octopus;Persist Security Info=False;User ID=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=False;Connection Timeout=30;"
       # MasterKey: C80c72OCglaRCTEhBwHMWQ==
-    # isolation: process
     ports:
       - "81:81"
     healthcheck:
@@ -51,7 +49,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == worker
+          # - node.role == worker
           - node.platform.os == windows
     networks:
       - octo-net
@@ -67,7 +65,6 @@ services:
       ServerUrl: "http://server:81"
       PublicHostNameConfiguration: Custom
       CustomPublicHostName: tentacle
-    # isolation: process
     stdin_open: true #Process sits and waits for ReadLine
     healthcheck:
       test: ["CMD", "powershell", "-file", "./Tentacle/healthcheck-tentacle.ps1"]
@@ -81,7 +78,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == worker
+          # - node.role == worker
           - node.platform.os == windows
     networks:
       - octo-net
