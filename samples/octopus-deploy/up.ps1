@@ -2,7 +2,7 @@
 param(
     [SecureString] $DatabasePassword,
     [string] $DatabaseVersion = '2017-latest-Latin1_General_CI_AS',
-    [string] $OctopusVersion = '2019.1.2-1809',
+    [string] $OctopusVersion = '2019.1.4-1809',
     [string] $OctopusTentacleVersion = '4.0.0-1809',
     [pscredential] $OctopusCredential,
     [switch] $SwarmDeploy
