@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  socat:
+    image: alpine/socat
+    command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - private
+  proxy:
+    image: traefik
+    command: --api --docker --docker.exposedByDefault=false --docker.endpoint=tcp://socat:2375 --docker.domain=docker.localhost
+    ports:
+      - "81:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - webgateway
+      - private
+
+
+networks:
+  webgateway:
+  private:
