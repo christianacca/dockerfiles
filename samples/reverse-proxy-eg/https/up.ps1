@@ -2,7 +2,7 @@
 
 # create locals certs and start traefik
 Push-Location $PSScriptRoot\traefik
-if (-not(Test-Path certs-trust)) {
+if (-not(Test-Path certs)) {
     .\New-Cert.ps1
 }
 docker-compose up -d

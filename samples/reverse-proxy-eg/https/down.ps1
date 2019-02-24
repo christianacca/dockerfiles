@@ -11,6 +11,5 @@ docker-compose down
 Pop-Location
 
 # remove certs
-Get-ChildItem Cert:\LocalMachine\Root\ | Where-Object { $_.GetName() -eq 'CN=test-app' } | Remove-Item
-Remove-Item $PSScriptRoot\traefik\certs -Force -Confirm:$false -Recurse -EA SilentlyContinue
-Remove-Item $PSScriptRoot\traefik\certs-trust -Force -Confirm:$false -Recurse -EA SilentlyContinue
+Get-ChildItem Cert:\LocalMachine\Root\ | Where-Object  { $_.GetName() -like '*test-app*' } | Remove-Item
+Remove-Item $PSScriptRoot\traefik\certs -Force -Confirm:$false -Recurse

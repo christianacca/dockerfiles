@@ -1,2 +1,4 @@
 certs/
-certs-trust/
+*.crt
+*.key
+*.pfx
