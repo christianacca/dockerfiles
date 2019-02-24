@@ -14,7 +14,7 @@ services:
       - "--api"
       - "--defaultEntryPoints=http,https"
       - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entrypoints=Name:https Address::443 TLS TLS.DefaultCertificate.Cert:/certs/test-app.crt TLS.DefaultCertificate.Key:/certs/test-app.key"
+      - "--entrypoints=Name:https Address::443 TLS TLS.DefaultCertificate.Cert:/certs/docker.localhost.crt TLS.DefaultCertificate.Key:/certs/docker.localhost.key"
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.endpoint=tcp://socat:2375"
