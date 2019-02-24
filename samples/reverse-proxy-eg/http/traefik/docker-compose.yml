@@ -10,7 +10,12 @@ services:
       - private
   proxy:
     image: traefik
-    command: --api --docker --docker.exposedByDefault=false --docker.endpoint=tcp://socat:2375 --docker.domain=docker.localhost
+    command: 
+      - "--api"
+      - "--docker"
+      - "--docker.exposedByDefault=false"
+      - "--docker.endpoint=tcp://socat:2375"
+      - "--docker.domain=docker.localhost"
     ports:
       - "81:80"
       - "8080:8080"

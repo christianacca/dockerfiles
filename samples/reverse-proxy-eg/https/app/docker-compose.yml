@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  whoami:
+    image: containous/whoami
+    labels: 
+      traefik.docker.network: traefik_webgateway
+      traefik.frontend.rule: 'PathStrip: /public-data'
+      traefik.enable: 'true'
+    networks:
+      - public
+
+networks:
+  public:
+    external:
+      name: traefik_webgateway
