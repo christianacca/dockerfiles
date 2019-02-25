@@ -12,11 +12,11 @@ This stack creates an octopus deploy setup that includes:
 * Wait for services to start
 * Browse to the Octopus deploy UI: http://localhost:81
 
-The above will start a new set of containers with a brand new installation of Octopus deploy
+The above will start a new set of containers with a brand new installation of Octopus deploy. If you want to continue using these containers, you will need to ensure container state is persist - see below 'Persist setup'
 
-### First time setup
+### Persist setup (one-time setup)
 
-The following steps need to be performed once after starting the stack for the first time
+The following steps need to be performed once _after_ starting the stack for the _first time_
 
 **1. Create initial deployment environment**
 
@@ -43,11 +43,11 @@ Octopus deploy server needs a masterkey. When starting a brand new stack with a 
 * Wait for octopus-deploy_server service to start (use `docker service ps octopus-deploy_server`)
 * Browse to the Octopus deploy UI: http://localhost:81
 
-The above will start a new set of containers with a brand new installation of Octopus deploy
+The above will start a new set of containers with a brand new installation of Octopus deploy. If you want to continue using these containers, you will need to ensure container service state is persist - see below 'Persist setup'
 
-### First time setup
+### Persist setup (one-time setup)
 
-The following steps need to be performed once after starting the stack for the first time
+The following steps need to be performed once _after_ starting the stack for the _first time_
 
 **1. Create initial deployment environment**
 
