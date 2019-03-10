@@ -1,5 +1,9 @@
 version: '3.4'
 
+# articles used to construct this compose:
+# * [Letting Traefik run on Worker Nodes](https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/)
+# * [Secure Traefik dashboard with https and password in docker](https://medium.com/@xavier.priour/secure-traefik-dashboard-with-https-and-password-in-docker-5b657e2aa15f)
+
 services:
   socat:
     image: alpine/socat
@@ -18,7 +22,15 @@ services:
       - "--docker.domain=docker.localhost"
     ports:
       - "81:80"
-      - "8080:8080"
+    expose:
+      # traefik dashboard port
+      - 8080
+    labels:
+      traefik.enable: 'true'
+      traefik.frontend.rule: "Host:traefik.docker.localhost"
+      # clear text pwd: Pn7-x6C@4xvP9,g
+      traefik.frontend.auth.basic: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
+      traefik.port: 8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
