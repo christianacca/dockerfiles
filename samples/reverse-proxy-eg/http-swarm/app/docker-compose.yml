@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  whoami:
+    image: containous/whoami
+    networks:
+      - public
+    deploy:
+      replicas: 2
+      labels:
+        traefik.docker.network: ${TRAEFIK_STACK}_webgateway
+        traefik.frontend.rule: 'Host: app.docker.localhost'
+        traefik.backend: app
+        traefik.enable: 'true'
+        traefik.port: 80
+
+networks:
+  public:
+    external: true
+    name: ${TRAEFIK_STACK}_webgateway
