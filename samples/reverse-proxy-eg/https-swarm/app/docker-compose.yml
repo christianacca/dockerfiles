@@ -8,13 +8,11 @@ services:
     deploy:
       replicas: 2
       labels:
-        traefik.docker.network: ${TRAEFIK_STACK}_webgateway
-        traefik.frontend.rule: 'Host: app.docker.localhost'
-        traefik.backend: app-backend
+        traefik.docker.network: ${TRAEFIK_STACK}_web
         traefik.enable: 'true'
         traefik.port: 80
 
 networks:
   public:
     external: true
-    name: ${TRAEFIK_STACK}_webgateway
+    name: ${TRAEFIK_STACK}_web

@@ -5,7 +5,6 @@ services:
     image: containous/whoami
     labels: 
       traefik.docker.network: traefik_webgateway
-      traefik.frontend.rule: 'Host: app.docker.localhost'
       traefik.enable: 'true'
     networks:
       - public
