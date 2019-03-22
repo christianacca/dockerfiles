@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+  whoami:
+    image: whoami
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "82:80"
+    networks:
+      - default
+    environment: 
+      - Kestrel__Limits__KeepAliveTimeout=00:00:20
+    deploy:
+      replicas: 2
+
+networks: 
+  default:
+    driver: overlay
+    attachable: true

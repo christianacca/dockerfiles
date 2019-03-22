@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+
+  monitor-1:
+    image: corfr/tcpdump
+    network_mode: "container:${SEVER_CONTAINER_1}"
+    volumes: 
+      - "./dumps:/data"
+    command: "-i any tcp -w /data/server1.pcapng"
+
+  monitor-2:
+    image: corfr/tcpdump
+    network_mode: "container:${SEVER_CONTAINER_2}"
+    volumes: 
+      - "./dumps:/data"
+    command: "-i any tcp -w /data/server1.pcapng"

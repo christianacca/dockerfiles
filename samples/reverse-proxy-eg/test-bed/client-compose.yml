@@ -1,0 +1,25 @@
+version: '3.5'
+
+services: 
+  whoami-client:
+    image: whoami-client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment: 
+      - TestRunner__Url=http://test-bed_whoami/api/whoami
+    networks: 
+      - test-bed_default
+
+  monitor:
+    image: corfr/tcpdump
+    network_mode: "service:whoami-client"
+    volumes: 
+      - "./dumps:/data"
+    command: "-i any tcp -w /data/client.pcapng"
+    depends_on:
+      - whoami-client
+
+networks:
+  test-bed_default:
+    external: true

@@ -6,4 +6,4 @@ services:
     ports:
       - "82:80"
     deploy:
-      replicas: 2
+      replicas: 1
