@@ -9,6 +9,7 @@ services:
     image: traefik
     command: 
       - "--api"
+      - "--keepTrailingSlash=true"
       - "--defaultEntryPoints=http,https"
       - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
       - "--entrypoints=Name:https Address::443 TLS TLS.DefaultCertificate.Cert:/certs/docker.localhost.crt TLS.DefaultCertificate.Key:/certs/docker.localhost.key"
@@ -21,7 +22,7 @@ services:
       traefik.enable: 'true'
       traefik.docker.network: traefik_webgateway
       # clear text pwd: Pn7-x6C@4xvP9,g
-      traefik.frontend.auth.basic: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
+      traefik.frontend.auth.basic.users: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       # traefik dashboard port
       traefik.port: 8080
     volumes:

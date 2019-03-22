@@ -8,6 +8,7 @@ services:
     image: traefik
     command: 
       - "--api"
+      - "--keepTrailingSlash=true"
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.domain=localhost"
@@ -16,7 +17,7 @@ services:
     labels:
       traefik.enable: 'true'
       # clear text pwd: Pn7-x6C@4xvP9,g
-      traefik.frontend.auth.basic: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
+      traefik.frontend.auth.basic.users: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       # traefik dashboard port
       traefik.port: 8080
     volumes:
