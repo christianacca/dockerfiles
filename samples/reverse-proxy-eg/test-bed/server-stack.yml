@@ -2,12 +2,7 @@ version: '3.5'
 
 services:
   whoami:
-    image: whoami
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    ports:
-      - "82:80"
+    image: christianacca/kestrel-whoami:1.0.0
     networks:
       - default
     environment: 

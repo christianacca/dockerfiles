@@ -2,12 +2,12 @@ version: '3.5'
 
 services: 
   whoami-client:
-    image: whoami-client
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: christianacca/httpclient-request:1.0
     environment: 
-      - TestRunner__Url=http://test-bed_whoami/api/whoami
+      - HttpRunner__Url=http://test-bed_whoami/api/whoami
+      - HttpRunner__RequestIntervals__0=00:00:05
+      - HttpRunner__RequestIntervals__1=00:00:02
+      - HttpRunner__RequestIntervals__2=00:00:25
     networks: 
       - test-bed_default
 
