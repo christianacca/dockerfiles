@@ -1,9 +1,0 @@
-version: '3.7'
-
-services:
-  whoami:
-    image: containous/whoami
-    ports:
-      - "82:80"
-    deploy:
-      replicas: 1

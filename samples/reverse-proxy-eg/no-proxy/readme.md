@@ -3,8 +3,8 @@
 * Run a docker swarm service scaled to 2 replicas
 * Use tcpdump to capture network trafic between docker service load balancer and the the 2 replicas
 * Use tcpdump to capture network trafic for HttpClient making requests to the docker service
-* network packet capture saved to dumps\ folder
-* Use Wireshark to to inspect the network packets captured dumps\
+* network packet capture saved to tests/dumps/ folder
+* Use Wireshark to to inspect the network packets captured tests/dumps/
 
 ### Running capture
 
