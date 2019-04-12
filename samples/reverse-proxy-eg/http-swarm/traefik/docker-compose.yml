@@ -16,25 +16,31 @@ services:
     image: traefik
     command: 
       - "--api"
+      - "--respondingTimeouts.idleTimeout=10s"
       - "--keepTrailingSlash=true"
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.endpoint=tcp://socat:2375"
-      - "--docker.domain=localhost"
+      - "--docker.domain=docker.localhost"
       - "--docker.swarmMode"
     ports:
       - "81:80"
+      # if you need X-Real-Ip/X-Forwarded-For header to be the client making the request you will need to use host mode publishing
+      # see issue: https://github.com/moby/moby/issues/25526
+      # EG:
+      # - target: 80
+      #   published: 81
+      #   protocol: tcp
+      #   mode: host
     deploy:
       labels:
         traefik.enable: 'true'
         traefik.backend: traefik
         traefik.docker.network: ${TRAEFIK_STACK}_web
-        traefik.frontend.rule: 'Host:traefik.localhost'
+        traefik.frontend.rule: 'Host:traefik.docker.localhost'
         # clear text pwd: Pn7-x6C@4xvP9,g
         traefik.frontend.auth.basic.users: 'docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0'
         traefik.port: 8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - web
       - private

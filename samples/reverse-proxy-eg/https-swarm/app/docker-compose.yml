@@ -2,14 +2,15 @@ version: '3.7'
 
 services:
   whoami:
-    image: containous/whoami
+    image: christianacca/kestrel-whoami:1.0.0
     networks:
       - public
     deploy:
       replicas: 2
       labels:
-        traefik.docker.network: ${TRAEFIK_STACK}_web
         traefik.enable: 'true'
+        traefik.docker.network: ${TRAEFIK_STACK}_web
+        traefik.frontend.rule: 'Host:whoami.docker.localhost'
         traefik.port: 80
 
 networks:

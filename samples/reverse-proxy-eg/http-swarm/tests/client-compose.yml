@@ -1,0 +1,22 @@
+version: '3.5'
+
+services: 
+  whoami-client:
+    image: christianacca/httpclient-request:1.0
+    environment: 
+      - HttpRunner__Url=http://host.docker.internal:81/api/whoami
+      - HttpRunner__Host=whoami.docker.localhost
+      - HttpRunner__RequestIntervals__0=00:00:05
+      - HttpRunner__RequestIntervals__1=00:00:02
+      - HttpRunner__RequestIntervals__2=00:00:15
+      - HttpRunner__RequestIntervals__3=00:00:35
+      - HttpRunner__RequestIntervals__4=
+
+  monitor:
+    image: corfr/tcpdump
+    network_mode: "service:whoami-client"
+    volumes: 
+      - "./dumps:/data"
+    command: "-i any tcp -w /data/client.pcapng"
+    depends_on:
+      - whoami-client

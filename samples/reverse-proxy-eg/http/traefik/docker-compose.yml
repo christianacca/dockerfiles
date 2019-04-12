@@ -11,11 +11,12 @@ services:
       - "--keepTrailingSlash=true"
       - "--docker"
       - "--docker.exposedByDefault=false"
-      - "--docker.domain=localhost"
+      - "--docker.domain=docker.localhost"
     ports:
       - "81:80"
     labels:
       traefik.enable: 'true'
+      traefik.frontend.rule: 'Host:traefik.docker.localhost'
       # clear text pwd: Pn7-x6C@4xvP9,g
       traefik.frontend.auth.basic.users: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       # traefik dashboard port

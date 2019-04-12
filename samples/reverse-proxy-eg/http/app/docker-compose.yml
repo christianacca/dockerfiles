@@ -2,10 +2,11 @@ version: '3.4'
 
 services:
   whoami:
-    image: containous/whoami
-    labels: 
-      traefik.docker.network: traefik_webgateway
+    image: christianacca/kestrel-whoami:1.0.0
+    labels:
       traefik.enable: 'true'
+      traefik.docker.network: traefik_webgateway
+      traefik.frontend.rule: 'Host:whoami.docker.localhost'
     networks:
       - public
 
