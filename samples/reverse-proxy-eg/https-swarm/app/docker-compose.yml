@@ -12,6 +12,9 @@ services:
         traefik.docker.network: ${TRAEFIK_STACK}_web
         traefik.frontend.rule: 'Host:whoami.docker.localhost'
         traefik.port: 80
+        traefik.backend.healthcheck.path: /api/health
+        # recommendation: match the same interval in the docker healthcheck
+        traefik.backend.healthcheck.interval: 5s
 
 networks:
   public:

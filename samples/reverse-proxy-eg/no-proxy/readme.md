@@ -16,9 +16,12 @@
 
 **Observations**
 
-* Kestrel issues a FIN-ACK after TCP connection remains idle after 20 seconds
-* Subsequent requests from the HttpClient on the same TCP connection/session are NOT load balanced over containers making up a service
-    * in other words docker will NOT load balance http requests to a service VIP on the same TCP connection
+* Kestrel issues a FIN-ACK:
+    * after TCP connection remains idle after 20 seconds
+    * when it shuts down
+* Docker forwards on FIN-ACK from Kestrl back to the HttpClient that opened the TCP connection
+* Subsequent requests from the HttpClient on the same TCP connection are NOT load balanced over containers making up a service
+    * in other words docker will continue sending http requests from the same TCP connection to the same container
 * HttpClient reuses existing connection
 * HttpClient does NOT reuse existing connection once connection closed
     * observed that after a FIN-ACK sent from server, that connection is NOT reused

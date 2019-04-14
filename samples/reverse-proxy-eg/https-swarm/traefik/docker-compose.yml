@@ -45,7 +45,6 @@ services:
         traefik.frontend.auth.basic.users: 'docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0'
         traefik.port: 8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - ./certs:/certs
     networks:
       - web
