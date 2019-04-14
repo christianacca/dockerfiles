@@ -1,0 +1,1 @@
+docker stack deploy -c $PSScriptRoot\app\docker-compose.yml no-proxy

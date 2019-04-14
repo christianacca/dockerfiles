@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   whoami:
-    image: christianacca/kestrel-whoami:1.0.0
+    image: christianacca/kestrel-whoami:1.0
     labels:
       traefik.enable: 'true'
       traefik.docker.network: traefik_webgateway

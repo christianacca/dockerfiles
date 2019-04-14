@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   whoami:
-    image: christianacca/kestrel-whoami:1.0.0
+    image: christianacca/kestrel-whoami:1.0
     networks:
       - public
     deploy:

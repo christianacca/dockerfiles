@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   whoami:
-    image: christianacca/kestrel-whoami:1.0.0
+    image: christianacca/kestrel-whoami:1.0
     networks:
       - default
     environment: 

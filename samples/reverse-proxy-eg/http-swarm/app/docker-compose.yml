@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   whoami:
-    image: christianacca/kestrel-whoami:1.0.0
+    image: christianacca/kestrel-whoami:1.0
     environment: 
       - Kestrel__Limits__KeepAliveTimeout=00:00:30
     networks:
