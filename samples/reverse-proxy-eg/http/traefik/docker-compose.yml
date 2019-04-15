@@ -8,7 +8,13 @@ services:
     image: traefik
     command: 
       - "--api"
+      - "--defaultEntryPoints=http"
+      - "--entrypoints=Name:http Address::80"
+      # clear text pwd: Pn7-x6C@4xvP9,g
+      - "--entrypoints=Name:traefik Address::8080 Auth.Basic.Users:docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       - "--keepTrailingSlash=true"
+      - "--ping"
+      - "--ping.entrypoint=http"
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.domain=docker.localhost"
@@ -16,9 +22,8 @@ services:
       - "81:80"
     labels:
       traefik.enable: 'true'
+      traefik.docker.network: traefik_webgateway
       traefik.frontend.rule: 'Host:traefik.docker.localhost'
-      # clear text pwd: Pn7-x6C@4xvP9,g
-      traefik.frontend.auth.basic.users: "docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       # traefik dashboard port
       traefik.port: 8080
     volumes:

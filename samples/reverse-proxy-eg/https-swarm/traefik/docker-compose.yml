@@ -19,14 +19,19 @@ services:
       - "--api"
       - "--defaultEntryPoints=http,https"
       - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
+      # clear text pwd: Pn7-x6C@4xvP9,g
+      - "--entrypoints=Name:traefik Address::8080 Auth.Basic.Users:docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       - "--entrypoints=Name:https Address::443 TLS TLS.DefaultCertificate.Cert:/certs/docker.localhost.crt TLS.DefaultCertificate.Key:/certs/docker.localhost.key"
       - "--keepTrailingSlash=true"
+      - "--ping"
+      - "--ping.entrypoint=http"
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.endpoint=tcp://socat:2375"
       - "--docker.domain=localhost"
       - "--docker.swarmMode"
     ports:
+      - "81:80"
       - "443:443"
       # if you need X-Real-Ip/X-Forwarded-For header to be the client making the request you will need to use host mode publishing
       # see issue: https://github.com/moby/moby/issues/25526
@@ -38,11 +43,8 @@ services:
     deploy:
       labels:
         traefik.enable: 'true'
-        traefik.backend: traefik
         traefik.docker.network: ${TRAEFIK_STACK}_web
         traefik.frontend.rule: 'Host:traefik.docker.localhost'
-        # clear text pwd: Pn7-x6C@4xvP9,g
-        traefik.frontend.auth.basic.users: 'docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0'
         traefik.port: 8080
     volumes:
       - ./certs:/certs

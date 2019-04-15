@@ -16,8 +16,13 @@ services:
     image: traefik
     command: 
       - "--api"
-      - "--respondingTimeouts.idleTimeout=10s"
+      - "--defaultEntryPoints=http"
+      - "--entrypoints=Name:http Address::80"
+      # clear text pwd: Pn7-x6C@4xvP9,g
+      - "--entrypoints=Name:traefik Address::8080 Auth.Basic.Users:docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0"
       - "--keepTrailingSlash=true"
+      - "--ping"
+      - "--ping.entrypoint=http"
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.endpoint=tcp://socat:2375"
@@ -38,8 +43,6 @@ services:
         traefik.backend: traefik
         traefik.docker.network: ${TRAEFIK_STACK}_web
         traefik.frontend.rule: 'Host:traefik.docker.localhost'
-        # clear text pwd: Pn7-x6C@4xvP9,g
-        traefik.frontend.auth.basic.users: 'docker:$$apr1$$Cv2tp6SH$$hoSgKoXezpBUTSm6A8REP0'
         traefik.port: 8080
     networks:
       - web
