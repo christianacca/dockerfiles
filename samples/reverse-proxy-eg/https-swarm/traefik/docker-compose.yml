@@ -28,7 +28,7 @@ services:
       - "--docker"
       - "--docker.exposedByDefault=false"
       - "--docker.endpoint=tcp://socat:2375"
-      - "--docker.domain=localhost"
+      - "--docker.domain=docker.localhost"
       - "--docker.swarmMode"
     ports:
       - "81:80"
