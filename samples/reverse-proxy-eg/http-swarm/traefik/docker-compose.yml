@@ -29,15 +29,14 @@ services:
       - "--docker.domain=docker.localhost"
       - "--docker.swarmMode"
     ports:
-      - "81:80"
-      # if you need X-Real-Ip/X-Forwarded-For header to be the client making the request you will need to use host mode publishing
+      # for X-Real-Ip/X-Forwarded-For header to be the client making the request you will need to use host mode publishing
       # see issue: https://github.com/moby/moby/issues/25526
-      # EG:
-      # - target: 80
-      #   published: 81
-      #   protocol: tcp
-      #   mode: host
+      - target: 80
+        published: 81
+        protocol: tcp
+        mode: host
     deploy:
+      mode: global
       labels:
         traefik.enable: 'true'
         traefik.backend: traefik
