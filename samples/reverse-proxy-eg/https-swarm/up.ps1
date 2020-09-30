@@ -5,7 +5,7 @@ $scriptPath = Resolve-Path "$PSScriptRoot\..\cert-gen\New-Cert.ps1"
 
 # create locals certs and start traefik
 if (-not(Test-Path $PSScriptRoot\traefik\certs\*)) {
-    New-Cert -Path $PSScriptRoot\traefik\certs -Trust
+    New-Cert -Path $PSScriptRoot\traefik\certs -Name 'docker.localhost' -Trust
 }
 
 $env:TRAEFIK_STACK = 'traefik'
